@@ -20,15 +20,16 @@ replace_words = {"program": "",
 # test_mode: set to True if you don't want the script to actually move anything or call sickbeard
 #  In this mode will just print what it would do if it wasn't in test mode
 test_mode = True 
+
+# pass_to_sickbeard: Set to True if you want script to pass off renamed file/folder to sickbeard's post processing script
+pass_to_sickbeard = True
 ########END CONFIG##########
                 
 def string_replace(orig_string):
     """ Takes the global replace_words dictionary and does all the replacements on orig_string"""
     for replace_word in replace_words:
-        case_insensitive = re.compile(re.escape(replace_word), re.IGNORECASE)
-        print "Replacing %s with %s" % (re.escape(replace_word), replace_words[replace_word])
-        orig_string = case_insensitive.sub(replace_words[replace_word], orig_string)
-        print orig_string
+        case_insensitive = re.compile(re.escape(replace_word), re.IGNORECASE)        
+        orig_string = case_insensitive.sub(replace_words[replace_word], orig_string)        
     return orig_string.strip()
 
 print "Arguments:"
@@ -57,7 +58,9 @@ try:
     id = re.search(r"\d\d\d\d", folder).group()
     
     # Create the fixed S04E21-style id
-    fixed_season = "S" + str(int(id[:2]) + season_delta) + "E" + int(id[2:]) + episode_delta
+    season = str(int(id[:2]) + season_delta)
+    ep = str(int(id[2:]) + episode_delta)
+    fixed_season = "S" + season + "E" + ep
     print "Used primary id method"
     print "Fixed season/episode: " + fixed_season
 except AttributeError, err:
@@ -70,8 +73,8 @@ except AttributeError, err:
     id = re.search(r"S\d\dE\d\d", folder).group()
     
     # Create the fixed S04E21-style id
-    season = int(_id[0]) + season_delta
-    ep = int(_id[1]) + episode_delta
+    season = str(int(_id[0]) + season_delta)
+    ep = str(int(_id[1]) + episode_delta)
     fixed_season = "S"+ season + "E" + ep
     print "Used secondary id method"
     print "Fixed season/episode: " + fixed_season
@@ -93,6 +96,7 @@ print
 if not test_mode:
     shutil.move(sys.argv[1], new_folder)
 
+
 files = os.listdir(new_folder)
 print "files: " + str(files)
 
@@ -111,5 +115,6 @@ for f in files:
 
 # pass fixed file/folder to sickbeard
 if not test_mode:
-    import autoProcessTV
-    autoProcessTV.processEpisode(new_folder)
+    if pass_to_sickbeard:
+        import autoProcessTV
+        autoProcessTV.processEpisode(new_folder)
