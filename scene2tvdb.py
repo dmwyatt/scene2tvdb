@@ -1,5 +1,4 @@
 #!/usr/bin/python
-import glob
 import sys
 import os
 import shutil
@@ -32,10 +31,6 @@ def string_replace(orig_string):
         orig_string = case_insensitive.sub(replace_words[replace_word], orig_string)        
     return orig_string.strip()
 
-print "Arguments:"
-for x in range(len(sys.argv)):
-    print sys.argv[x]
-    
 if len(sys.argv) < 2:
     print "No folder supplied "
     sys.exit()
@@ -44,13 +39,8 @@ print "moving:"
 print sys.argv[1]
 print "-----------------------"
 print
+
 root, folder = os.path.split(sys.argv[1])
-print "Root: " + root
-print "Folder: " + folder
-print "-----------------------"
-print
-
-
 try:
     # Some episodes are labeled with season/episode like 0421
     
@@ -61,7 +51,7 @@ try:
     season = str(int(id[:2]) + season_delta)
     ep = str(int(id[2:]) + episode_delta)
     fixed_season = "S" + season + "E" + ep
-    print "Used primary id method"
+    print "Used xxxx id method"
     print "Fixed season/episode: " + fixed_season
 except AttributeError, err:
     # Some episodes are labeled with S04E21
@@ -76,7 +66,7 @@ except AttributeError, err:
     season = str(int(_id[0]) + season_delta)
     ep = str(int(_id[1]) + episode_delta)
     fixed_season = "S"+ season + "E" + ep
-    print "Used secondary id method"
+    print "Used SxxExx id method"
     print "Fixed season/episode: " + fixed_season
 
 print "-----------------------"
@@ -88,22 +78,24 @@ new_folder = os.path.join(root, folder.replace(id, fixed_season))
 # Replace strings in folder name
 new_folder = string_replace(new_folder)
 
-print "---------------------"
-print
 print "to: " + new_folder
 print
 
 if not test_mode:
     shutil.move(sys.argv[1], new_folder)
 
-
-files = os.listdir(new_folder)
-print "files: " + str(files)
+if not test_mode:
+    files = os.listdir(new_folder)
+else:
+    files = os.listdir(sys.argv[1])
 
 for f in files:
-
+    print id, f
     if id in f:
-        full_path = os.path.join(new_folder, f)
+        if not test_mode:
+            full_path = os.path.join(new_folder, f)
+        else: 
+            full_path = os.path.join(folder, f)
         if os.path.isfile(full_path):
             # replace the season/episode id in the filename
             new_f = f.replace(id, fixed_season)
