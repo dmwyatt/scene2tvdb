@@ -9,3 +9,4 @@ How It Works
 3.  Edit the values in this script near the beginning of the file between the lines indicating config values.
 4.  Save a copy of this script, with an appropriate name for the show you're downloading, in the same directory as Sickbeard's autoProcessTv.py script.  (Or if you're not using sickbeard, whereever you want as long as SABnzbd can see it as a post-processing script.)
 5.  Profit as SABnzbd and Sickbeard correctly rename and identify shows with messed up tvdb naming/numbering.
+6.  Edit the show in Sickbeard and set it to "Paused" so Sickbeard doesn't try downloading the show itself.
