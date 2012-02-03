@@ -27,11 +27,11 @@ def string_replace(orig_string):
 
 print "Arguments:"
 for x in range(len(sys.argv)):
-	print sys.argv[x]
-	
+    print sys.argv[x]
+    
 if len(sys.argv) < 2:
-	print "No folder supplied "
-	sys.exit()
+    print "No folder supplied "
+    sys.exit()
 
 print "moving:"
 print sys.argv[1]
@@ -48,27 +48,27 @@ try:
     # Some episodes are labeled with season/episode like 0421
     
     # Get the four-digit season/episode id
-	id = re.search(r"\d\d\d\d", folder).group()
+    id = re.search(r"\d\d\d\d", folder).group()
     
     # Create the fixed S04E21-style id
-	fixed_season = "S" + str(int(id[:2]) + season_delta) + "E" + int(id[2:]) + episode_delta
-	print "Used primary id method"
-	print "Fixed season/episode: " + fixed_season
+    fixed_season = "S" + str(int(id[:2]) + season_delta) + "E" + int(id[2:]) + episode_delta
+    print "Used primary id method"
+    print "Fixed season/episode: " + fixed_season
 except AttributeError, err:
     # Some episodes are labeled with S04E21
     
     # Get the S04E21-style id with season and episode groups
-	_id = re.search(r"S(\d\d)E(\d\d)", folder).groups()
+    _id = re.search(r"S(\d\d)E(\d\d)", folder).groups()
     
     # Get the whole string
-	id = re.search(r"S\d\dE\d\d", folder).group()
+    id = re.search(r"S\d\dE\d\d", folder).group()
     
     # Create the fixed S04E21-style id
-	season = int(_id[0]) + season_delta
-	ep = int(_id[1]) + episode_delta
-	fixed_season = "S"+ season + "E" + ep
-	print "Used secondary id method"
-	print "Fixed season/episode: " + fixed_season
+    season = int(_id[0]) + season_delta
+    ep = int(_id[1]) + episode_delta
+    fixed_season = "S"+ season + "E" + ep
+    print "Used secondary id method"
+    print "Fixed season/episode: " + fixed_season
 
 print "-----------------------"
 print
@@ -90,15 +90,15 @@ print "files: " + str(files)
 
 for f in files:
 
-	if id in f:
-		full_path = os.path.join(new_folder, f)
-		if os.path.isfile(full_path):
+    if id in f:
+        full_path = os.path.join(new_folder, f)
+        if os.path.isfile(full_path):
             # replace the season/episode id in the filename
-			new_f = f.replace(id, fixed_season)
+            new_f = f.replace(id, fixed_season)
             # do word replacements
             new_f = string_replace(new_f)
-			shutil.move(full_path, os.path.join(new_folder, new_f))
-			print f + " renamed to: " + new_f
+            shutil.move(full_path, os.path.join(new_folder, new_f))
+            print f + " renamed to: " + new_f
 
 # pass fixed file/folder to sickbeard            
 autoProcessTV.processEpisode(new_folder)
