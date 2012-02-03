@@ -6,6 +6,7 @@ import shutil
 import re
 import autoProcessTV
 
+##########CONFIG############
 season_delta = 2 # use positive or negative integers to add or subtract from the downloaded season number
 episode_delta = 0 # use positive or negative integers to add or subtract from the downloaded episode number
 
@@ -15,6 +16,11 @@ episode_delta = 0 # use positive or negative integers to add or subtract from th
 replace_words = {"program": "", 
                 "stupid string": "non stupid string",
                 "another stupid string": "another non-stupid string"} 
+
+# test_mode: set to True if you don't want the script to actually move anything or call sickbeard
+#  In this mode will just print what it would do if it wasn't in test mode
+test_mode = False 
+########END CONFIG##########
                 
 def string_replace(orig_string):
     """ Takes the global replace_words dictionary and does all the replacements on orig_string"""
@@ -83,7 +89,9 @@ print "---------------------"
 print
 print "to: " + new_folder
 print
-shutil.move(sys.argv[1], new_folder)
+
+if not test_mode:
+    shutil.move(sys.argv[1], new_folder)
 
 files = os.listdir(new_folder)
 print "files: " + str(files)
@@ -97,8 +105,10 @@ for f in files:
             new_f = f.replace(id, fixed_season)
             # do word replacements
             new_f = string_replace(new_f)
-            shutil.move(full_path, os.path.join(new_folder, new_f))
+            if not test_mode:
+                shutil.move(full_path, os.path.join(new_folder, new_f))
             print f + " renamed to: " + new_f
 
-# pass fixed file/folder to sickbeard            
-autoProcessTV.processEpisode(new_folder)
+# pass fixed file/folder to sickbeard
+if not test_mode:
+    autoProcessTV.processEpisode(new_folder)
