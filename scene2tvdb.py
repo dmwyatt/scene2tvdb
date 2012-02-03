@@ -4,7 +4,7 @@ import sys
 import os
 import shutil
 import re
-import autoProcessTV
+
 
 ##########CONFIG############
 season_delta = 2 # use positive or negative integers to add or subtract from the downloaded season number
@@ -19,7 +19,7 @@ replace_words = {"program": "",
 
 # test_mode: set to True if you don't want the script to actually move anything or call sickbeard
 #  In this mode will just print what it would do if it wasn't in test mode
-test_mode = False 
+test_mode = True 
 ########END CONFIG##########
                 
 def string_replace(orig_string):
@@ -111,4 +111,5 @@ for f in files:
 
 # pass fixed file/folder to sickbeard
 if not test_mode:
+    import autoProcessTV
     autoProcessTV.processEpisode(new_folder)
