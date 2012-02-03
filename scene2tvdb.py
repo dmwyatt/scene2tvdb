@@ -1,4 +1,21 @@
 #!/usr/bin/python
+# Author: Dustin Wyatt <dustin.wyatt@gmail.com>, Nic Wolfe <nic@wolfeden.ca>
+# URL: http://code.google.com/p/sickbeard/
+# URL: https://github.com/therms/scene2tvdb
+#
+#
+# scene2tvdb is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# scene2tvdb is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Sick Beard.  If not, see <http://www.gnu.org/licenses/>.
 import sys
 import os
 import shutil
@@ -494,7 +511,6 @@ print sys.argv[1]
 print "-----------------------"
 print
 
-# replace words
 root, orig_folder = os.path.split(sys.argv[1])
 
 parser = NameParser(file_name=False)
@@ -525,7 +541,7 @@ for f in files:
     else:
         full_path = os.path.join(root, orig_folder, f)
     if os.path.isfile(full_path):
-        file_info = parser.parse(f)
+        file_info = parser.parse(string_replace(f, replace_words))
         file_info.adjust_numbering(episode_delta, season_delta)
         new_f = file_info.__str__()
         if not test_mode:
